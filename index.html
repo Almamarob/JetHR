@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proiezione Retribuzione Netta</title>
+    <link href="https://cdn.prod.website-files.com/640f31fdbc9b4615e81b9422/64b000f21d46dd8131f821e2_favicon%201.png" rel="shortcut icon" type="image/x-icon">
+    <link href="https://cdn.prod.website-files.com/640f31fdbc9b4615e81b9422/64b000f567d9771a8b3b5dcd_favicon%202.png" rel="apple-touch-icon">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Proiezione Retribuzione Netta</h1>
+        </header>
+
+        <div class="calculator-card">
+            <div class="input-section">
+                <div class="salary-row">
+
+                    <div class="salary-col salary-ral">
+                        <label for="ral" class="section-title">
+                            Retribuzione Annua Lorda (RAL)
+                            <span class="info-icon" data-tooltip="La RAL è lo stipendio lordo annuale prima di qualsiasi trattenuta (tasse, contributi). È il valore indicato nel contratto di lavoro e include tutte le mensilità.">i</span>
+                        </label>
+                        <div class="input-wrapper input-with-select">
+                            <select id="valuta" class="currency-select" disabled>
+                                <option value="EUR" selected>€</option>
+                            </select>
+                            <input
+                                type="text"
+                                id="ral"
+                                placeholder="Es. 30.000"
+                                inputmode="numeric"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="salary-col salary-mensilita">
+                        <label for="mensilita" class="section-title">
+                            Mensilità
+                            <span class="info-icon" data-tooltip="Numero di mensilità in cui viene suddiviso lo stipendio annuale. 13ª = tredicesima (dicembre), 14ª = quattordicesima (giugno/luglio). Il netto annuale rimane lo stesso, cambia solo la distribuzione mensile.">i</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <select id="mensilita">
+                                <option value="12">12</option>
+                                <option value="13" selected>13</option>
+                                <option value="14">14</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                
+
+                <label class="section-title">
+                    Luogo di Residenza
+                    <span class="info-icon" data-tooltip="La residenza fiscale determina le addizionali regionali e comunali IRPEF. Ogni regione e comune ha aliquote diverse che incidono sul netto finale.">i</span>
+                </label>
+                <div class="input-wrapper location-group">
+                    <select id="nazione" class="location-select" disabled>
+                        <option value="italia" selected>Italia</option>
+                    </select>
+                    <select id="regione" class="location-select" disabled>
+                        <option value="lombardia" selected>Lombardia</option>
+                    </select>
+                    <select id="citta" class="location-select" disabled>
+                        <option value="milano" selected>Milano</option>
+                    </select>
+                </div>
+
+                <label for="contratto" class="section-title">
+                    Tipologia Contratto
+                    <span class="info-icon" data-tooltip="Il tipo di contratto può influenzare contributi e trattenute. Il contratto a tempo indeterminato è la forma più comune e stabile di rapporto di lavoro.">i</span>
+                </label>
+
+                <div class="input-wrapper">
+                    <select id="contratto" disabled>
+                        <option value="indeterminato" selected>
+                            Indeterminato
+                        </option>
+                    </select>
+                </div>
+
+                <label for="agevolazioni" class="section-title">
+                    Agevolazioni Contributive
+                    <span class="info-icon" data-tooltip="Alcune categorie di lavoratori (es. under 36, apprendisti, rientro cervelli) possono beneficiare di riduzioni sui contributi previdenziali o sull'imponibile fiscale.">i</span>
+                </label>
+
+                <div class="input-wrapper">
+                    <select id="agevolazioni" disabled>
+                        <option value="nessuna" selected>
+                            Nessuna Agevolazione
+                        </option>
+                    </select>
+                </div>
+
+                <label for="detrazioni" class="section-title">
+                    Detrazioni Fiscali
+                    <span class="info-icon" data-tooltip="Le detrazioni riducono l'IRPEF dovuta. Oltre a quella per lavoro dipendente (calcolata automaticamente), esistono detrazioni per familiari a carico, spese mediche, mutuo, etc.">i</span>
+                </label>
+
+                <div class="input-wrapper">
+                    <select id="detrazioni" disabled>
+                        <option value="nessuna" selected>
+                            Nessuna Detrazione
+                        </option>
+                    </select>
+                </div>
+
+
+                <div class="button-group">
+                    <button id="calculate" class="btn-primary">Calcola</button>
+                    <button id="reset" class="btn-secondary">Svuota</button>
+                </div>
+            </div>
+
+            <div id="results" class="results-section">
+
+                <h2 class="section-title">Stipendio Netto</h2>
+
+
+                <div class="summary-cards">
+                    <div class="summary-card" id="cardAnnuale">
+                        <h3>Netto Annuale</h3>
+                        <p class="amount" id="nettoAnnuale">€ 0,00</p>
+                    </div>
+                    <div class="summary-card" id="cardMensile">
+                        <h3>Netto Mensile</h3>
+                        <p class="amount" id="nettoMensile">€ 0,00</p>
+                    </div>
+                </div>
+
+                <!-- CTA Score Città -->
+                <div id="cityScoreCTA" class="city-score-cta" style="display: none;">
+                    <div class="cta-content">
+                        <div class="cta-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="cta-text">
+                            <span class="cta-title">Il tuo stipendio è adeguato per <span id="ctaCityName">Milano</span>?</span>
+                            <span class="cta-subtitle">Scopri il punteggio basato sul costo della vita</span>
+                        </div>
+                        <button id="openScorePopup" class="cta-button">
+                            Scopri Score
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Popup Score Città -->
+                <div id="scorePopupOverlay" class="popup-overlay">
+                    <div class="popup-container">
+                        <button id="closeScorePopup" class="popup-close">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <div class="popup-content">
+                            <h2 class="popup-title">
+                                Valutazione Stipendio
+                                <span class="info-icon" data-tooltip="Questo punteggio valuta quanto il tuo stipendio sia adeguato rispetto al costo della vita nella città selezionata. Considera affitti, trasporti, spese quotidiane e qualità della vita.">i</span>
+                            </h2>
+                            <p class="popup-subtitle">per <span id="popupCityName">Milano</span></p>
+
+                            <div class="score-container">
+                                <div class="score-gauge">
+                                    <div class="score-fill" id="scoreFill"></div>
+                                    <div class="score-indicator" id="scoreIndicator"></div>
+                                </div>
+                                <div class="score-labels">
+                                    <span>Critico</span>
+                                    <span>Difficile</span>
+                                    <span>Adeguato</span>
+                                    <span>Buono</span>
+                                </div>
+                                <div class="score-value">
+                                    <span class="score-number" id="scoreNumber">0</span>
+                                    <span class="score-max">/100</span>
+                                </div>
+                                <div class="score-verdict" id="scoreVerdict">Inserisci i dati per calcolare</div>
+                            </div>
+                            <div class="score-details" id="scoreDetails"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="breakdown-section">
+                    <h2 class="section-title">
+                        Dettaglio Trattenute
+                        <span class="info-icon" data-tooltip="Ecco come viene calcolato il tuo stipendio netto partendo dal lordo: RAL - Contributi INPS = Imponibile IRPEF. Poi si calcola l'IRPEF a scaglioni, si sottraggono le detrazioni e le addizionali.">i</span>
+                    </h2>
+
+                    <div class="calc-flow">
+                        <div class="calc-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <div class="step-title">Partiamo dalla RAL</div>
+                                <div class="step-desc">Il tuo stipendio lordo annuale come da contratto</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="breakdown-item">
+                        <div class="breakdown-header">
+                            <span class="breakdown-label">
+                                RAL (Lordo Annuale)
+                                <span class="info-icon small" data-tooltip="Retribuzione Annua Lorda: è l'importo totale che il datore di lavoro destina al tuo stipendio, prima di qualsiasi trattenuta.">i</span>
+                            </span>
+                            <span class="breakdown-value" id="ralDisplay">€ 0,00</span>
+                        </div>
+                    </div>
+
+                    <div class="calc-flow">
+                        <div class="calc-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <div class="step-title">Sottraiamo i contributi INPS</div>
+                                <div class="step-desc">Vanno alla tua pensione futura e alla previdenza sociale</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="breakdown-group">
+                        <h3>
+                            Contributi Previdenziali INPS (a carico dipendente)
+                            <span class="info-icon small" data-tooltip="L'INPS trattiene il 9,19% del tuo stipendio per finanziare la pensione, la cassa integrazione, la disoccupazione e altre tutele sociali. Il datore di lavoro versa un ulteriore ~30% (non visibile in busta paga).">i</span>
+                        </h3>
+                        <div class="breakdown-item sub-item">
+                            <span class="breakdown-label">9,19% della RAL</span>
+                            <span class="breakdown-value negative" id="contributiINPS">- € 0,00</span>
+                        </div>
+                        <div class="calc-formula" id="formulaINPS">RAL × 9,19% = Contributi INPS</div>
+                    </div>
+
+                    <div class="calc-flow">
+                        <div class="calc-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <div class="step-title">Otteniamo l'imponibile IRPEF</div>
+                                <div class="step-desc">La base su cui si calcolano le tasse sul reddito</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="breakdown-item total">
+                        <div class="breakdown-header">
+                            <span class="breakdown-label">
+                                <strong>Imponibile IRPEF</strong>
+                                <span class="info-icon small" data-tooltip="È il reddito su cui si calcolano le imposte. Si ottiene sottraendo i contributi INPS dalla RAL. Formula: RAL - Contributi INPS = Imponibile IRPEF">i</span>
+                            </span>
+                            <span class="breakdown-value" id="imponibileIRPEF">€ 0,00</span>
+                        </div>
+                        <div class="calc-formula" id="formulaImponibile">RAL - Contributi INPS = Imponibile IRPEF</div>
+                    </div>
+
+                    <div class="calc-flow">
+                        <div class="calc-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <div class="step-title">Calcoliamo l'IRPEF a scaglioni</div>
+                                <div class="step-desc">L'imposta sul reddito cresce in modo progressivo</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="breakdown-group">
+                        <h3>
+                            IRPEF (Imposta sul Reddito)
+                            <span class="info-icon small" data-tooltip="L'IRPEF è un'imposta progressiva: più guadagni, più alta è l'aliquota. Si applica a 'scaglioni': i primi 28.000€ al 23%, da 28.001€ a 50.000€ al 33
+                            %, oltre 50.000€ al 43%.">i</span>
+                        </h3>
+                        <div class="irpef-scaglioni-info">
+                            <div class="scaglione-chip">Fino a €28.000: 23%</div>
+                            <div class="scaglione-chip">€28.001-50.000: 33%</div>
+                            <div class="scaglione-chip">Oltre €50.000: 43%</div>
+                        </div>
+                        <div id="irpefBreakdown"></div>
+                        <div class="breakdown-item sub-item total-sub">
+                            <span class="breakdown-label"><strong>Totale IRPEF Lorda</strong></span>
+                            <span class="breakdown-value negative" id="totaleIRPEF">- € 0,00</span>
+                        </div>
+                    </div>
+
+                    <div class="calc-flow">
+                        <div class="calc-step positive">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <div class="step-title">Applichiamo le detrazioni</div>
+                                <div class="step-desc">Riducono l'IRPEF da pagare (è un bonus!)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="breakdown-group">
+                        <h3>
+                            Detrazioni Fiscali
+                            <span class="info-icon small" data-tooltip="Le detrazioni sono 'sconti' sull'IRPEF. Quella per lavoro dipendente è automatica e varia in base al reddito: più guadagni, meno detrai. Per redditi fino a €15.000 la detrazione massima è €1.955.">i</span>
+                        </h3>
+                        <div class="breakdown-item sub-item">
+                            <span class="breakdown-label">Detrazione lavoro dipendente</span>
+                            <span class="breakdown-value positive" id="detrazioniLavoro">+ € 0,00</span>
+                        </div>
+                        <div class="calc-formula" id="formulaDetrazioni">IRPEF Lorda - Detrazioni = IRPEF Netta</div>
+                    </div>
+
+                    <div class="breakdown-item total">
+                        <div class="breakdown-header">
+                            <span class="breakdown-label">
+                                <strong>IRPEF Netta</strong>
+                                <span class="info-icon small" data-tooltip="È l'imposta effettiva che pagherai dopo aver applicato le detrazioni. Formula: IRPEF Lorda - Detrazioni = IRPEF Netta">i</span>
+                            </span>
+                            <span class="breakdown-value negative" id="irpefNetta">- € 0,00</span>
+                        </div>
+                    </div>
+
+                    <div class="calc-flow">
+                        <div class="calc-step">
+                            <div class="step-number">6</div>
+                            <div class="step-content">
+                                <div class="step-title">Aggiungiamo le addizionali locali</div>
+                                <div class="step-desc">Tasse regionali e comunali sulla base del luogo di residenza</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="breakdown-group">
+                        <h3>
+                            Addizionali
+                            <span class="info-icon small" data-tooltip="Sono imposte aggiuntive che variano in base a dove vivi. L'addizionale regionale va alla Regione (per sanità, trasporti), quella comunale al Comune (per servizi locali).">i</span>
+                        </h3>
+                        <div class="breakdown-item sub-item">
+                            <span class="breakdown-label">
+                                Addizionale Regionale (1,73%)
+                                <span class="info-icon small" data-tooltip="Varia da regione a regione (da 1,23% a 3,33%). La Lombardia applica l'1,73% medio. Finanzia servizi regionali come la sanità.">i</span>
+                            </span>
+                            <span class="breakdown-value negative" id="addRegionale">- € 0,00</span>
+                        </div>
+                        <div class="breakdown-item sub-item">
+                            <span class="breakdown-label">
+                                Addizionale Comunale (0,8%)
+                                <span class="info-icon small" data-tooltip="Varia da comune a comune (da 0% a 0,9%). Milano applica lo 0,8%. Finanzia servizi comunali come trasporti e scuole.">i</span>
+                            </span>
+                            <span class="breakdown-value negative" id="addComunale">- € 0,00</span>
+                        </div>
+                    </div>
+
+                    <div class="calc-flow final">
+                        <div class="calc-step highlight">
+                            <div class="step-number">7</div>
+                            <div class="step-content">
+                                <div class="step-title">Ecco il tuo Netto!</div>
+                                <div class="step-desc">RAL - Contributi - IRPEF Netta - Addizionali</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="breakdown-item final-total">
+                        <div class="breakdown-header">
+                            <span class="breakdown-label"><strong>NETTO ANNUALE</strong></span>
+                            <span class="breakdown-value highlight" id="finalNetto">€ 0,00</span>
+                        </div>
+                        <div class="calc-formula final" id="formulaFinale">RAL - INPS - IRPEF Netta - Addizionali = Netto</div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-content">
+                            <strong>Attenzione</strong>
+                            <p>La simulazione è basata su un caso base di un solo dipendente senza coniuge né figli a carico. Tasse, imposte e detrazioni dipendono molto dalle scelte di ciascun lavoratore.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
