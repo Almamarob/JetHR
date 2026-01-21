@@ -81,7 +81,7 @@ body {
     position: relative;
     z-index: 1;
     height: 100%;
-    overflow: hidden;
+    overflow: visible;
     gap:1.5rem;
 }
 
@@ -1418,7 +1418,7 @@ select:disabled {
 
 @media (max-width: 1024px) {
     .container {
-        overflow: auto;
+        overflow: visible;
         height: auto;
         gap: 2rem;
     }
